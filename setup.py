@@ -41,7 +41,7 @@ for x in range(0, 2):
 	cpass.set('cred', 'hash', xhash)
 	xphone = input(gr+"[+] enter phone number : "+re)
 	cpass.set('cred', 'phone', xphone)
-	setup = open(c, 'w')
+	setup = open("config"+b, 'w')
 	cpass.write(setup)
 	setup.close()
 print(gr+"[+] setup complete !")
