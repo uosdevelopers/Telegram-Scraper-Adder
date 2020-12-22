@@ -40,7 +40,6 @@ try:
     client0 = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
-    banner()
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
@@ -48,7 +47,6 @@ client0.connect()
 if not client0.is_user_authorized():
     client0.send_code_request(phone)
     os.system('clear')
-    banner()
     client0.sign_in(phone, input(gr+'[+] Enter the code: '+re))
     
 cpass1 = configparser.RawConfigParser()
@@ -61,7 +59,6 @@ try:
     client1 = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
-    banner()
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
@@ -69,7 +66,6 @@ client1.connect()
 if not client1.is_user_authorized():
     client1.send_code_request(phone)
     os.system('clear')
-    banner()
     client1.sign_in(phone, input(gr+'[+] Enter the code: '+re))
 
 users = []
