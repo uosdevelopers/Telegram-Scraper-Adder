@@ -30,26 +30,47 @@ print ("3. Add only 50 members in group each time otherwise you will get flood e
 print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
-cpass = configparser.RawConfigParser()
-cpass.read('config.data')
+cpass0 = configparser.RawConfigParser()
+cpass0.read('config0.data')
 
 try:
-    api_id = cpass['cred']['id']
-    api_hash = cpass['cred']['hash']
-    phone = cpass['cred']['phone']
-    client = TelegramClient(phone, api_id, api_hash)
+    api_id = cpass0['cred']['id']
+    api_hash = cpass0['cred']['hash']
+    phone = cpass0['cred']['phone']
+    client0 = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
     banner()
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
-client.connect()
-if not client.is_user_authorized():
-    client.send_code_request(phone)
+client0.connect()
+if not client0.is_user_authorized():
+    client0.send_code_request(phone)
     os.system('clear')
     banner()
-    client.sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client0.sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    
+cpass1 = configparser.RawConfigParser()
+cpass1.read('config1.data')
+
+try:
+    api_id = cpass1['cred']['id']
+    api_hash = cpass1['cred']['hash']
+    phone = cpass1['cred']['phone']
+    client1 = TelegramClient(phone, api_id, api_hash)
+except KeyError:
+    os.system('clear')
+    banner()
+    print(re+"[!] run python setup.py first !!\n")
+    sys.exit(1)
+
+client1.connect()
+if not client1.is_user_authorized():
+    client1.send_code_request(phone)
+    os.system('clear')
+    banner()
+    client1.sign_in(phone, input(gr+'[+] Enter the code: '+re))
 
 users = []
 with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
@@ -68,7 +89,7 @@ last_date = None
 chunk_size = 200
 groups = []
 
-result = client(GetDialogsRequest(
+result = client0(GetDialogsRequest(
     offset_date=last_date,
     offset_id=0,
     offset_peer=InputPeerEmpty(),
@@ -98,9 +119,17 @@ target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash
 mode = int(input(gr+"Enter 1 to add by username or 2 to add by ID: "+cy))
 
 n = 0
+m = 0
 
 for user in users:
     n += 1
+    m += 1
+    if m > 3:
+        client = client1
+    else:
+        client = client0
+    if m == 7:
+        m = 0
     if n % 80 == 0:
         sleep(60)
     try:
