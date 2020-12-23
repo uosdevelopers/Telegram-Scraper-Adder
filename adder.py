@@ -30,43 +30,43 @@ print ("3. Add only 50 members in group each time otherwise you will get flood e
 print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
-cpass0 = configparser.RawConfigParser()
-cpass0.read('config0.data')
+cpass[0][0] = configparser.RawConfigParser()
+cpass[0][0].read('config0.data')
 
 try:
-    api_id = cpass0['cred']['id']
-    api_hash = cpass0['cred']['hash']
-    phone = cpass0['cred']['phone']
-    client0 = TelegramClient(phone, api_id, api_hash)
+    api_id = cpass[0][0]['cred']['id']
+    api_hash = cpass[0][0]['cred']['hash']
+    phone = cpass[0][0]['cred']['phone']
+    client[0][0] = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
-client0.connect()
-if not client0.is_user_authorized():
-    client0.send_code_request(phone)
+client[0][0].connect()
+if not client[0][0].is_user_authorized():
+    client[0][0].send_code_request(phone)
     os.system('clear')
-    client0.sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client[0][0].sign_in(phone, input(gr+'[+] Enter the code: '+re))
     
-cpass1 = configparser.RawConfigParser()
-cpass1.read('config1.data')
+cpass[0][1] = configparser.RawConfigParser()
+cpass[0][1].read('config1.data')
 
 try:
-    api_id = cpass1['cred']['id']
-    api_hash = cpass1['cred']['hash']
-    phone = cpass1['cred']['phone']
-    client1 = TelegramClient(phone, api_id, api_hash)
+    api_id = cpass[0][1]['cred']['id']
+    api_hash = cpass[0][1]['cred']['hash']
+    phone = cpass[0][1]['cred']['phone']
+    client[0][1] = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
-client1.connect()
-if not client1.is_user_authorized():
-    client1.send_code_request(phone)
+client[0][1].connect()
+if not client[0][1].is_user_authorized():
+    client[0][1].send_code_request(phone)
     os.system('clear')
-    client1.sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client[0][1].sign_in(phone, input(gr+'[+] Enter the code: '+re))
 
 users = []
 with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
@@ -80,35 +80,37 @@ with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
         user['name'] = row[3]
         users.append(user)
 
-chats = []
+chats = [[],[]]
 last_date = None
 chunk_size = 200
-groups = []
+groups = [[],[]]
+        
+for x in range(0, 2):
+    result = client[0][0](GetDialogsRequest(
+        offset_date=last_date,
+        offset_id=0,
+        offset_peer=InputPeerEmpty(),
+        limit=chunk_size,
+        hash=0
+    ))
+    chats[x].extend(result.chats)
 
-result = client0(GetDialogsRequest(
-    offset_date=last_date,
-    offset_id=0,
-    offset_peer=InputPeerEmpty(),
-    limit=chunk_size,
-    hash=0
-))
-chats.extend(result.chats)
-
-for chat in chats:
-    try:
-        if chat.megagroup == True:
-            groups.append(chat)
-    except:
-        continue
+    for chat in chats[x]:
+        try:
+            if chat.megagroup == True:
+                groups[x].append(chat)
+        except:
+            continue
 
 print(gr+'Choose a group to add members:'+cy)
 i = 0
-for group in groups:
+for group in groups[0]:
     print(str(i) + '- ' + group.title)
     i += 1
 
 g_index = input(gr+"Enter a Number: "+re)
-target_group = groups[int(g_index)]
+target_group = groups[0][int(g_index)]
+target_group_title = target_group.title
 
 target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
@@ -121,9 +123,15 @@ for user in users:
     n += 1
     m += 1
     if m > 3:
-        client = client1
+        client = client[0][1]
+        g_index = groups[1].index(target_group_title)
+        target_group = groups[1][int(g_index)]
+        target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     else:
-        client = client0
+        client = client[0][0]
+        g_index = groups[0].index(target_group_title)
+        target_group = groups[1][int(g_index)]
+        target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     if m == 7:
         m = 0
     if n % 80 == 0:
@@ -140,18 +148,18 @@ for user in users:
             sys.exit("Invalid Mode Selected. Please Try Again.")
         client(InviteToChannelRequest(target_group_entity, [user_to_add]))
         print("Waiting for 80 Seconds...")
-        time.sleep(80)
+        time.sleep(30)
     except PeerFloodError:
         print("Getting Flood Error from telegram. Script is stopping now. Please try again after some time.")
         print("Waiting for 80 Seconds...")
-        time.sleep(80)
+        time.sleep(30)
     except UserPrivacyRestrictedError:
         print("The user's privacy settings do not allow you to do this. Skipping.")
         print("Waiting for 80 Seconds...")
-        time.sleep(80)
+        time.sleep(30)
     except:
         traceback.print_exc()
         print("Unexpected Error")
         print("Waiting for 80 Seconds...")
-        time.sleep(80)
+        time.sleep(30)
         continue
