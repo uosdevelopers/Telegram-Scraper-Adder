@@ -30,7 +30,7 @@ print ("3. Add only 50 members in group each time otherwise you will get flood e
 print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
-cpass = []
+cpass = [[],[]]
 cpass[0] = configparser.RawConfigParser()
 cpass[0].read('config0.data')
 print(type(cpass))
