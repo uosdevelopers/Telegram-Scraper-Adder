@@ -91,7 +91,7 @@ chunk_size = 200
 groups = [[],[]]
         
 for x in range(0, 2):
-    result = client[0](GetDialogsRequest(
+    result = client[x](GetDialogsRequest(
         offset_date=last_date,
         offset_id=0,
         offset_peer=InputPeerEmpty(),
@@ -129,13 +129,23 @@ for user in users:
     m += 1
     if m > 3:
         client = client[1]
-        g_index = groups[1].index(target_group_title)
+        index = 0
+        for group in groups[1]:
+            if group.title == target_group_title:
+                g_index = index
+                break
+            index += 1
         target_group = groups[1][int(g_index)]
         target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     else:
         client = client[0]
-        g_index = groups[0].index(target_group_title)
-        target_group = groups[1][int(g_index)]
+        index = 0
+        for group in groups[0]:
+            if group.title == target_group_title:
+                g_index = index
+                break
+            index += 1
+        target_group = groups[0][int(g_index)]
         target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     if m == 7:
         m = 0
