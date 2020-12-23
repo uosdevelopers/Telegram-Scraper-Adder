@@ -36,7 +36,7 @@ cpass[0].read('config0.data')
 print(type(cpass))
 print(type(cpass[0]))
 
-client = []
+client = [[],[]]
 
 try:
     api_id = cpass[0]['cred']['id']
