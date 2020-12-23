@@ -128,7 +128,7 @@ for user in users:
     n += 1
     m += 1
     if m > 3:
-        client = client[1]
+        cl = client[1]
         index = 0
         for group in groups[1]:
             if group.title == target_group_title:
@@ -138,7 +138,7 @@ for user in users:
         target_group = groups[1][int(g_index)]
         target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     else:
-        client = client[0]
+        cl = client[0]
         index = 0
         for group in groups[0]:
             if group.title == target_group_title:
@@ -156,12 +156,12 @@ for user in users:
         if mode == 1:
             if user['username'] == "":
                 continue
-            user_to_add = client.get_input_entity(user['username'])
+            user_to_add = cl.get_input_entity(user['username'])
         elif mode == 2:
             user_to_add = InputPeerUser(user['id'], user['access_hash'])
         else:
             sys.exit("Invalid Mode Selected. Please Try Again.")
-        client(InviteToChannelRequest(target_group_entity, [user_to_add]))
+        cl(InviteToChannelRequest(target_group_entity, [user_to_add]))
         print("Waiting for 80 Seconds...")
         time.sleep(30)
     except PeerFloodError:
