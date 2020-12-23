@@ -30,43 +30,48 @@ print ("3. Add only 50 members in group each time otherwise you will get flood e
 print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
-cpass[0][0] = configparser.RawConfigParser()
-cpass[0][0].read('config0.data')
+cpass = []
+cpass[0] = configparser.RawConfigParser()
+cpass[0].read('config0.data')
+print(type(cpass))
+print(type(cpass[0]))
+
+client = []
 
 try:
-    api_id = cpass[0][0]['cred']['id']
-    api_hash = cpass[0][0]['cred']['hash']
-    phone = cpass[0][0]['cred']['phone']
-    client[0][0] = TelegramClient(phone, api_id, api_hash)
+    api_id = cpass[0]['cred']['id']
+    api_hash = cpass[0]['cred']['hash']
+    phone = cpass[0]['cred']['phone']
+    client[0] = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
-client[0][0].connect()
-if not client[0][0].is_user_authorized():
-    client[0][0].send_code_request(phone)
+client[0].connect()
+if not client[0].is_user_authorized():
+    client[0].send_code_request(phone)
     os.system('clear')
-    client[0][0].sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client[0].sign_in(phone, input(gr+'[+] Enter the code: '+re))
     
-cpass[0][1] = configparser.RawConfigParser()
-cpass[0][1].read('config1.data')
+cpass[1] = configparser.RawConfigParser()
+cpass[1].read('config1.data')
 
 try:
-    api_id = cpass[0][1]['cred']['id']
-    api_hash = cpass[0][1]['cred']['hash']
-    phone = cpass[0][1]['cred']['phone']
-    client[0][1] = TelegramClient(phone, api_id, api_hash)
+    api_id = cpass[1]['cred']['id']
+    api_hash = cpass[1]['cred']['hash']
+    phone = cpass[1]['cred']['phone']
+    client[1] = TelegramClient(phone, api_id, api_hash)
 except KeyError:
     os.system('clear')
     print(re+"[!] run python setup.py first !!\n")
     sys.exit(1)
 
-client[0][1].connect()
-if not client[0][1].is_user_authorized():
-    client[0][1].send_code_request(phone)
+client[1].connect()
+if not client[1].is_user_authorized():
+    client[1].send_code_request(phone)
     os.system('clear')
-    client[0][1].sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client[1].sign_in(phone, input(gr+'[+] Enter the code: '+re))
 
 users = []
 with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
@@ -86,7 +91,7 @@ chunk_size = 200
 groups = [[],[]]
         
 for x in range(0, 2):
-    result = client[0][0](GetDialogsRequest(
+    result = client[0](GetDialogsRequest(
         offset_date=last_date,
         offset_id=0,
         offset_peer=InputPeerEmpty(),
@@ -123,12 +128,12 @@ for user in users:
     n += 1
     m += 1
     if m > 3:
-        client = client[0][1]
+        client = client[1]
         g_index = groups[1].index(target_group_title)
         target_group = groups[1][int(g_index)]
         target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     else:
-        client = client[0][0]
+        client = client[0]
         g_index = groups[0].index(target_group_title)
         target_group = groups[1][int(g_index)]
         target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
