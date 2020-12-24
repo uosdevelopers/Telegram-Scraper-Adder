@@ -35,8 +35,8 @@ client = [[],[]]
 
 for x in range(0, 10):
     a = "config"
-	b = str(x)+".data"
-	c = a+b
+    b = str(x)+".data"
+    c = a+b
     cpass[x] = configparser.RawConfigParser()
     cpass[x].read(c)
 
