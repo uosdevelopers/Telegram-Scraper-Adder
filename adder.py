@@ -116,6 +116,8 @@ for user in users:
             g_index = index
             break
         index += 1
+    print(m)
+    print(int(g_index))
     target_group = groups[m][int(g_index)]
     target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     m += 1
