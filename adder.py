@@ -31,47 +31,30 @@ print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
 cpass = [[],[]]
-cpass[0] = configparser.RawConfigParser()
-cpass[0].read('config0.data')
-print(type(cpass))
-print(type(cpass[0]))
-
 client = [[],[]]
 
-try:
-    api_id = cpass[0]['cred']['id']
-    api_hash = cpass[0]['cred']['hash']
-    phone = cpass[0]['cred']['phone']
-    client[0] = TelegramClient(phone, api_id, api_hash)
-except KeyError:
-    os.system('clear')
-    print(re+"[!] run python setup.py first !!\n")
-    sys.exit(1)
+for x in range(0, 10):
+    a = "config"
+	b = str(x)+".data"
+	c = a+b
+    cpass[x] = configparser.RawConfigParser()
+    cpass[x].read(c)
 
-client[0].connect()
-if not client[0].is_user_authorized():
-    client[0].send_code_request(phone)
-    os.system('clear')
-    client[0].sign_in(phone, input(gr+'[+] Enter the code: '+re))
-    
-cpass[1] = configparser.RawConfigParser()
-cpass[1].read('config1.data')
+    try:
+        api_id = cpass[x]['cred']['id']
+        api_hash = cpass[x]['cred']['hash']
+        phone = cpass[x]['cred']['phone']
+        client[x] = TelegramClient(phone, api_id, api_hash)
+    except KeyError:
+        os.system('clear')
+        print(re+"[!] run python setup.py first !!\n")
+        sys.exit(1)
 
-try:
-    api_id = cpass[1]['cred']['id']
-    api_hash = cpass[1]['cred']['hash']
-    phone = cpass[1]['cred']['phone']
-    client[1] = TelegramClient(phone, api_id, api_hash)
-except KeyError:
-    os.system('clear')
-    print(re+"[!] run python setup.py first !!\n")
-    sys.exit(1)
-
-client[1].connect()
-if not client[1].is_user_authorized():
-    client[1].send_code_request(phone)
-    os.system('clear')
-    client[1].sign_in(phone, input(gr+'[+] Enter the code: '+re))
+    client[x].connect()
+    if not client[x].is_user_authorized():
+        client[x].send_code_request(phone)
+        os.system('clear')
+        client[x].sign_in(phone, input(gr+'[+] Enter the code: '+re))
 
 users = []
 with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
@@ -90,7 +73,7 @@ last_date = None
 chunk_size = 200
 groups = [[],[]]
         
-for x in range(0, 2):
+for x in range(0, 10):
     result = client[x](GetDialogsRequest(
         offset_date=last_date,
         offset_id=0,
@@ -126,28 +109,17 @@ m = 0
 
 for user in users:
     n += 1
+    cl = client[m]
+    index = 0
+    for group in groups[m]:
+        if group.title == target_group_title:
+            g_index = index
+            break
+        index += 1
+    target_group = groups[m][int(g_index)]
+    target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
     m += 1
-    if m > 3:
-        cl = client[1]
-        index = 0
-        for group in groups[1]:
-            if group.title == target_group_title:
-                g_index = index
-                break
-            index += 1
-        target_group = groups[1][int(g_index)]
-        target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
-    else:
-        cl = client[0]
-        index = 0
-        for group in groups[0]:
-            if group.title == target_group_title:
-                g_index = index
-                break
-            index += 1
-        target_group = groups[0][int(g_index)]
-        target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
-    if m == 7:
+    if m == 10:
         m = 0
     if n % 80 == 0:
         sleep(60)
