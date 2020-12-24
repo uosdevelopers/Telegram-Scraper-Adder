@@ -112,11 +112,14 @@ for user in users:
     cl = client[m]
     index = 0
     for group in groups[m]:
+        print(m)
         if group.title == target_group_title:
             g_index = index
             print(m)
             print(int(g_index))
             break
+        else:
+            g_index = 0
         index += 1
     target_group = groups[m][int(g_index)]
     target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
