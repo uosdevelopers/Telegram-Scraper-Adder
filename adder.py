@@ -30,8 +30,8 @@ print ("3. Add only 50 members in group each time otherwise you will get flood e
 print ("4. Then wait for 15-30 miniute then add members again.")
 print ("5. Make sure you enable Add User Permission in your group")
 
-cpass = [[],[]]
-client = [[],[]]
+cpass = [[],[],[],[],[],[],[],[],[],[]]
+client = [[],[],[],[],[],[],[],[],[],[]]
 
 for x in range(0, 10):
     a = "config"
@@ -68,10 +68,10 @@ with open(r"members.csv", encoding='UTF-8') as f:  #Enter your file name
         user['name'] = row[3]
         users.append(user)
 
-chats = [[],[]]
+chats = [[],[],[],[],[],[],[],[],[],[]]
 last_date = None
 chunk_size = 200
-groups = [[],[]]
+groups = [[],[],[],[],[],[],[],[],[],[]]
         
 for x in range(0, 10):
     result = client[x](GetDialogsRequest(
