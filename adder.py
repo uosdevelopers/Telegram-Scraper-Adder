@@ -112,11 +112,8 @@ for user in users:
     cl = client[m]
     index = 0
     for group in groups[m]:
-        print(m)
         if group.title == target_group_title:
             g_index = index
-            print(m)
-            print(int(g_index))
             break
         else:
             g_index = 0
@@ -139,19 +136,19 @@ for user in users:
         else:
             sys.exit("Invalid Mode Selected. Please Try Again.")
         cl(InviteToChannelRequest(target_group_entity, [user_to_add]))
-        print("Waiting for 80 Seconds...")
-        time.sleep(30)
+        print("Waiting for 10 Seconds...")
+        time.sleep(10)
     except PeerFloodError:
         print("Getting Flood Error from telegram. Script is stopping now. Please try again after some time.")
-        print("Waiting for 80 Seconds...")
-        time.sleep(30)
+        print("Waiting for 10 Seconds...")
+        time.sleep(10)
     except UserPrivacyRestrictedError:
         print("The user's privacy settings do not allow you to do this. Skipping.")
-        print("Waiting for 80 Seconds...")
-        time.sleep(30)
+        print("Waiting for 10 Seconds...")
+        time.sleep(10)
     except:
         traceback.print_exc()
         print("Unexpected Error")
-        print("Waiting for 80 Seconds...")
-        time.sleep(30)
+        print("Waiting for 10 Seconds...")
+        time.sleep(10)
         continue
