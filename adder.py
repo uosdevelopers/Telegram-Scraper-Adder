@@ -124,7 +124,7 @@ for user in users:
     if m == 10:
         m = 0
     if n % 80 == 0:
-        sleep(60)
+        time.sleep(60)
     try:
         print("Adding {}".format(user['id']))
         if mode == 1:
